@@ -3,8 +3,6 @@ package co.uis.proyecto.controladores;
 import co.uis.proyecto.entidades.DetalleFactura;
 import co.uis.proyecto.servicios.DetalleFacturaService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

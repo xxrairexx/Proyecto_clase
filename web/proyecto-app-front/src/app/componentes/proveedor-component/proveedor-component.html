@@ -1,1 +1,96 @@
-<p>proveedor-component works!</p>
+<h2>Gestión de proveedor</h2>
+
+@if (editandoId() !== null) {
+  <div class="edit-banner">Editando proveedor #{{ editandoId() }}</div>
+}
+
+<form [formGroup]="form" (ngSubmit)="guardar()" class="formulario">
+
+  <div class="fila">
+    <label>Nombre</label>
+    <input formControlName="nombre" placeholder="Nombre de la empresa" />
+    @if (form.get('nombre')?.touched && form.get('nombre')?.invalid) {
+      <small class="val">El nombre es obligatorio.</small>
+    }
+  </div>
+
+  <div class="fila">
+    <label>Contacto</label>
+    <input formControlName="contacto" placeholder="Persona de contacto" />
+    @if (form.get('contacto')?.touched && form.get('contacto')?.invalid) {
+      <small class="val">El contacto es obligatorio.</small>
+    }
+  </div>
+
+  <div class="fila">
+    <label>Teléfono</label>
+    <input formControlName="telefono" placeholder="3001234567" />
+    @if (form.get('telefono')?.touched && form.get('telefono')?.hasError('required')) {
+      <small class="val">El teléfono es obligatorio.</small>
+    } @else if (form.get('telefono')?.touched && form.get('telefono')?.hasError('pattern')) {
+      <small class="val">Solo dígitos (7–15).</small>
+    }
+  </div>
+
+  <div class="fila">
+    <label>Ciudad</label>
+    <input formControlName="ciudad" placeholder="Ciudad" />
+    @if (form.get('ciudad')?.touched && form.get('ciudad')?.invalid) {
+      <small class="val">La ciudad es obligatoria.</small>
+    }
+  </div>
+
+  <div class="acciones-form">
+    <button type="submit" [disabled]="form.invalid || guardando()">
+      {{ editandoId() !== null ? (guardando() ? 'Actualizando…' : 'Actualizar') : (guardando() ? 'Guardando…' : 'Guardar') }}
+    </button>
+
+    @if (editandoId() !== null) {
+      <button type="button" class="secundario" (click)="cancelarEdicion()" [disabled]="guardando()">Cancelar</button>
+    }
+  </div>
+</form>
+
+<hr />
+
+@if (cargandoLista()) {
+  <div>Cargando...</div>
+}
+
+@if (error()) {
+  <div class="error">{{ error() }}</div>
+}
+
+@if (!cargandoLista() && proveedores().length > 0) {
+  <table class="clientes-tabla">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Contacto</th>
+        <th>Teléfono</th>
+        <th>Ciudad</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (p of proveedores(); track p.id) {
+        <tr>
+          <td>{{ p.id }}</td>
+          <td>{{ p.nombre }}</td>
+          <td>{{ p.contacto }}</td>
+          <td>{{ p.telefono }}</td>
+          <td>{{ p.ciudad }}</td>
+          <td class="acciones">
+            <button type="button" class="link" (click)="editar(p)">Editar</button> |
+            <button type="button" class="link rojo" (click)="eliminar(p)">Eliminar</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+} @else {
+  @if (!cargandoLista() && !error()) {
+    <div>No hay proveedores registrados.</div>
+  }
+} 

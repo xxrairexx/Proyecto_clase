@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service @RequiredArgsConstructor
 public class PerfilService {
@@ -16,11 +17,16 @@ public class PerfilService {
   public List<Perfil> listar( ){ return repo.findAll(); }
 
   public Perfil obtener(Integer id){
+    Objects.requireNonNull(id, "id");
     return repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Perfil no encontrado"));
   }
 
   @Transactional
-  public Perfil crear(Perfil p){ return repo.save(p); }
+  public Perfil crear(Perfil p){ 
+    Objects.requireNonNull(p, "p");
+    Perfil saved = repo.save(p);
+    return Objects.requireNonNull(saved, "Perfil no puede ser null");
+   }
 
   @Transactional
   public Perfil actualizar(Integer id, Perfil p){
@@ -33,5 +39,5 @@ public class PerfilService {
   }
 
   @Transactional
-  public void eliminar(Integer id){ repo.deleteById(id); }
+  public void eliminar(Integer id){ repo.deleteById(Objects.requireNonNull(id, "id")); }
 }

@@ -8,15 +8,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service @RequiredArgsConstructor
 public class ClienteService {
   private final ClienteRepository repo;
 
   public List<Cliente> listar(){ return repo.findAll(); }
-  public Cliente obtener(Integer id){ return repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado")); }
+  public Cliente obtener(Integer id){ 
+    Objects.requireNonNull(id, "id");
+    return repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado")); }
 
-  @Transactional public Cliente crear(Cliente c){ return repo.save(c); }
+  
+
+  @Transactional
+  public Cliente crear(Cliente c){
+    Objects.requireNonNull(c, "c");
+    Cliente saved = repo.save(c);
+    return Objects.requireNonNull(saved, "Cliente no puede ser null");
+  }
 
   @Transactional
   public Cliente actualizar(Integer id, Cliente c){
@@ -28,5 +38,5 @@ public class ClienteService {
     return repo.save(a);
   }
 
-  @Transactional public void eliminar(Integer id){ repo.deleteById(id); }
+  @Transactional public void eliminar(Integer id){ repo.deleteById(Objects.requireNonNull(id, "id")); }
 }

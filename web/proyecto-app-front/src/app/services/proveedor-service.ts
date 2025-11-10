@@ -10,12 +10,11 @@ export interface Proveedor {
   ciudad: string;
 }
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class ProveedorService {
-  private baseUrl = 'http://localhost:8080/api/proveedor';
+  private baseUrl = 'http://localhost:8080/api/proveedores'; // cambiado a plural
 
   constructor(private http: HttpClient) { }
 
@@ -23,14 +22,15 @@ export class ProveedorService {
     return this.http.get<Proveedor[]>(this.baseUrl);
   }
 
-  crear(Proveedor: Proveedor): Observable<Proveedor> {
-    return this.http.post<Proveedor>(this.baseUrl, Proveedor);
+  crear(proveedor: Proveedor): Observable<Proveedor> {
+    return this.http.post<Proveedor>(this.baseUrl, proveedor);
   }
-  actualizar(id: number, Proveedor: Proveedor) {
-    return this.http.put<Proveedor>(`${this.baseUrl}/${id}`, Proveedor);
+  
+  actualizar(id: number, proveedor: Proveedor) {
+    return this.http.put<Proveedor>(`${this.baseUrl}/${id}`, proveedor);
   }
+  
   eliminar(id: number) {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
-
 }

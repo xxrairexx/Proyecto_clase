@@ -8,15 +8,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service @RequiredArgsConstructor
 public class ProveedorService {
   private final ProveedorRepository repo;
 
   public List<Proveedor> listar( ){ return repo.findAll(); }
-  public Proveedor obtener(Integer id){ return repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Proveedor no encontrado")); }
+  public Proveedor obtener(Integer id){ 
+    Objects.requireNonNull(id, "id");
+    return repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Proveedor no encontrado")); }
 
-  @Transactional public Proveedor crear(Proveedor p){ return repo.save(p); }
+  @Transactional public Proveedor crear(Proveedor p){   
+    Objects.requireNonNull(p, "p");
+    Proveedor saved = repo.save(p);
+    return Objects.requireNonNull(saved, "Proveedor no puede ser null");
+   }
 
   @Transactional
   public Proveedor actualizar(Integer id, Proveedor p){
@@ -28,5 +35,5 @@ public class ProveedorService {
     return repo.save(a);
   }
 
-  @Transactional public void eliminar(Integer id){ repo.deleteById(id); }
+  @Transactional public void eliminar(Integer id){ repo.deleteById(Objects.requireNonNull(id, "id")); }
 }

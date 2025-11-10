@@ -9,15 +9,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service @RequiredArgsConstructor
 public class SesionService {
   private final SesionRepository repo;
 
   public List<Sesion> listar(){ return repo.findAll(); }
-  public Sesion obtener(Integer id){ return repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Sesión no encontrada")); }
+  public Sesion obtener(Integer id){ 
+    Objects.requireNonNull(id, "id");
+    return repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Sesión no encontrada")); }
 
-  @Transactional public Sesion crear(Sesion s){ return repo.save(s); }
+  @Transactional public Sesion crear(Sesion s){
+    Objects.requireNonNull(s, "s");
+    Sesion saved = repo.save(s);
+    return Objects.requireNonNull(saved, "Sesión no puede ser null");
+   }
 
   @Transactional
   public Sesion actualizar(Integer id, Sesion s){
@@ -29,5 +36,5 @@ public class SesionService {
     return repo.save(a);
   }
 
-  @Transactional public void eliminar(Integer id){ repo.deleteById(id); }
+  @Transactional public void eliminar(Integer id){ repo.deleteById(Objects.requireNonNull(id, "id")); }
 }
